@@ -34,8 +34,16 @@ export default function Suppliers() {
 
   useEffect(() => { load(); }, [load]);
 
-  const openAdd = () => { setForm(EMPTY); setErrors({}); setModal('add'); };
-  const openEdit = (row) => { setForm({ ...row }); setErrors({}); setModal(row); };
+  const openAdd = () => {
+    setForm(EMPTY);
+    setErrors({});
+    setModal('add');
+  };
+  const openEdit = (row) => {
+    setForm({ ...row });
+    setErrors({});
+    setModal(row);
+  };
   const closeModal = () => setModal(null);
 
   const showToast = (message, type = 'success') => {
@@ -46,6 +54,7 @@ export default function Suppliers() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       if (modal === 'add') {
         await supplierService.create(form);
@@ -54,9 +63,14 @@ export default function Suppliers() {
         await supplierService.update(modal.id, form);
         showToast('Supplier berhasil diperbarui');
       }
+
       closeModal();
       load();
     } catch (err) {
+      if (err.message) {
+        setErrors({ raw_material: [err.message] });
+        return;
+      }
       setErrors(err.response?.data?.errors ?? {});
     } finally {
       setLoading(false);
@@ -133,6 +147,7 @@ export default function Suppliers() {
                 <option value="nonaktif">Nonaktif</option>
               </Select>
             </FormField>
+
             <div className="flex gap-2 justify-end pt-2">
               <button type="button" onClick={closeModal} className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">Batal</button>
               <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50">

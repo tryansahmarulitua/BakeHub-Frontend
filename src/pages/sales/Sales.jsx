@@ -82,10 +82,11 @@ export default function Sales() {
 
   const calculateTotals = () => {
     const subtotal = form.details.reduce((sum, d) => sum + (d.quantity * d.unit_price), 0);
-    const discount = form.discount || 0;
-    const tax = form.tax || 0;
-    const total = subtotal - discount + tax;
-    const payment = form.payment_amount || 0;
+    const discount = parseFloat(form.discount) || 0;
+    const dpp = Math.max(0, subtotal - discount);
+    const tax = Math.round(dpp * 0.12); // PPN 12% otomatis
+    const total = dpp + tax;
+    const payment = parseFloat(form.payment_amount) || 0;
     const change = Math.max(0, payment - total);
     return { subtotal, discount, tax, total, payment, change };
   };
@@ -185,11 +186,16 @@ export default function Sales() {
             </div>
 
             <div className="grid grid-cols-3 gap-3">
-              <FormField label="Diskon" error={errors.discount?.[0]}>
+              <FormField label="Diskon (Rp)" error={errors.discount?.[0]}>
                 <Input type="number" min="0" value={form.discount} onChange={(e) => setForm({ ...form, discount: parseFloat(e.target.value) || 0 })} />
               </FormField>
-              <FormField label="Pajak" error={errors.tax?.[0]}>
-                <Input type="number" min="0" value={form.tax} onChange={(e) => setForm({ ...form, tax: parseFloat(e.target.value) || 0 })} />
+              <FormField label="PPN (12% Otomatis)">
+                <input
+                  type="text"
+                  readOnly
+                  value={IDR(calculateTotals().tax)}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-medium"
+                />
               </FormField>
               <FormField label="Metode Pembayaran" error={errors.payment_method?.[0]}>
                 <Select value={form.payment_method} onChange={(e) => setForm({ ...form, payment_method: e.target.value })}>
@@ -246,13 +252,13 @@ export default function Sales() {
               </div>
             </div>
 
-            <div className="bg-gray-50 p-3 rounded text-sm">
-              <div className="flex justify-between py-1"><span>Subtotal:</span><span>{IDR(calculateTotals().subtotal)}</span></div>
-              <div className="flex justify-between py-1"><span>Diskon:</span><span>-{IDR(calculateTotals().discount)}</span></div>
-              <div className="flex justify-between py-1"><span>Pajak:</span><span>+{IDR(calculateTotals().tax)}</span></div>
-              <div className="flex justify-between py-1 font-semibold border-t"><span>Total:</span><span>{IDR(calculateTotals().total)}</span></div>
-              <div className="flex justify-between py-1"><span>Bayar:</span><span>{IDR(calculateTotals().payment)}</span></div>
-              <div className="flex justify-between py-1"><span>Kembalian:</span><span>{IDR(calculateTotals().change)}</span></div>
+            <div className="bg-gray-50 p-3 rounded text-sm space-y-1">
+              <div className="flex justify-between py-0.5"><span>Subtotal:</span><span>{IDR(calculateTotals().subtotal)}</span></div>
+              <div className="flex justify-between py-0.5 text-red-600"><span>Diskon:</span><span>-{IDR(calculateTotals().discount)}</span></div>
+              <div className="flex justify-between py-0.5 text-indigo-700 font-medium"><span>PPN (12%):</span><span>+{IDR(calculateTotals().tax)}</span></div>
+              <div className="flex justify-between py-1 font-bold text-base border-t text-gray-900"><span>Total Tagihan:</span><span>{IDR(calculateTotals().total)}</span></div>
+              <div className="flex justify-between py-0.5"><span>Bayar:</span><span>{IDR(calculateTotals().payment)}</span></div>
+              <div className="flex justify-between py-0.5 font-semibold text-green-700"><span>Kembalian:</span><span>{IDR(calculateTotals().change)}</span></div>
             </div>
 
             <div className="flex gap-2 justify-end pt-2 border-t">
@@ -272,9 +278,9 @@ export default function Sales() {
             <p><strong>Customer:</strong> {viewModal.customer?.nama ?? '-'}</p>
             <p><strong>Tanggal:</strong> {viewModal.sale_date}</p>
             <p><strong>Subtotal:</strong> {IDR(viewModal.subtotal)}</p>
-            <p><strong>Diskon:</strong> {IDR(viewModal.discount)}</p>
-            <p><strong>Pajak:</strong> {IDR(viewModal.tax)}</p>
-            <p><strong>Total:</strong> {IDR(viewModal.total)}</p>
+            <p><strong>Diskon:</strong> -{IDR(viewModal.discount)}</p>
+            <p><strong>PPN (12%):</strong> +{IDR(viewModal.tax)}</p>
+            <p className="font-bold text-base text-indigo-700"><strong>Total:</strong> {IDR(viewModal.total)}</p>
             <p><strong>Bayar:</strong> {IDR(viewModal.payment_amount)}</p>
             <p><strong>Kembalian:</strong> {IDR(viewModal.change_amount)}</p>
             <p><strong>Metode:</strong> <Badge value={viewModal.payment_method} map={PAYMENT_MAP} /></p>
