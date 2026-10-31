@@ -137,6 +137,16 @@ export default function Sales() {
     }
   };
 
+  const handleView = async (row) => {
+    setViewModal(row);
+    try {
+      const res = await salesService.get(row.id);
+      if (res.data?.data) setViewModal(res.data.data);
+    } catch {
+      // fallback
+    }
+  };
+
   const columns = [
     { key: 'invoice_number', label: 'Nomor' },
     { key: 'customer', label: 'Customer', render: (r) => r.customer?.nama ?? '-' },
@@ -148,7 +158,7 @@ export default function Sales() {
       key: 'actions', label: 'Aksi',
       render: (r) => (
         <div className="flex gap-2">
-          <button onClick={() => setViewModal(r)} className="text-blue-600 hover:underline">Detail</button>
+          <button onClick={() => handleView(r)} className="text-blue-600 hover:underline">Detail</button>
           {r.status === 'completed' && (
             <button onClick={() => action(salesService.cancel, r.id, 'Penjualan dibatalkan')} className="text-red-600 hover:underline">Batal</button>
           )}
@@ -273,41 +283,79 @@ export default function Sales() {
 
       {/* Modal Detail Penjualan */}
       {viewModal && (
-        <Modal title={`Detail ${viewModal.invoice_number}`} onClose={() => setViewModal(null)}>
-          <div className="space-y-3 text-sm">
-            <p><strong>Customer:</strong> {viewModal.customer?.nama ?? '-'}</p>
-            <p><strong>Tanggal:</strong> {viewModal.sale_date}</p>
-            <p><strong>Subtotal:</strong> {IDR(viewModal.subtotal)}</p>
-            <p><strong>Diskon:</strong> -{IDR(viewModal.discount)}</p>
-            <p><strong>PPN (12%):</strong> +{IDR(viewModal.tax)}</p>
-            <p className="font-bold text-base text-indigo-700"><strong>Total:</strong> {IDR(viewModal.total)}</p>
-            <p><strong>Bayar:</strong> {IDR(viewModal.payment_amount)}</p>
-            <p><strong>Kembalian:</strong> {IDR(viewModal.change_amount)}</p>
-            <p><strong>Metode:</strong> <Badge value={viewModal.payment_method} map={PAYMENT_MAP} /></p>
-            <p><strong>Status:</strong> <Badge value={viewModal.status} map={STATUS_MAP} /></p>
+        <Modal title={`Detail Penjualan: ${viewModal.invoice_number}`} onClose={() => setViewModal(null)}>
+          <div className="space-y-4 text-sm">
+            <div className="grid grid-cols-2 gap-3 bg-gray-50 p-3 rounded-lg text-xs">
+              <p><strong>Customer:</strong> {viewModal.customer?.nama ?? 'Umum / Walk-in'}</p>
+              <p><strong>Tanggal:</strong> {viewModal.sale_date ? String(viewModal.sale_date).split('T')[0] : '-'}</p>
+              <p><strong>Kasir:</strong> {viewModal.creator?.name ?? '-'}</p>
+              <p><strong>Metode:</strong> <Badge value={viewModal.payment_method} map={PAYMENT_MAP} /></p>
+              <p><strong>Status:</strong> <Badge value={viewModal.status} map={STATUS_MAP} /></p>
+              <p><strong>Catatan:</strong> {viewModal.notes || '-'}</p>
+            </div>
 
-            <table className="min-w-full border text-xs mt-3">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-3 py-2 text-left">Produk</th>
-                  <th className="px-3 py-2 text-right">Qty</th>
-                  <th className="px-3 py-2 text-right">Harga</th>
-                  <th className="px-3 py-2 text-right">Diskon</th>
-                  <th className="px-3 py-2 text-right">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {viewModal.details?.map((d) => (
-                  <tr key={d.id} className="border-t">
-                    <td className="px-3 py-2">{d.product?.nama_produk}</td>
-                    <td className="px-3 py-2 text-right">{d.quantity}</td>
-                    <td className="px-3 py-2 text-right">{IDR(d.unit_price)}</td>
-                    <td className="px-3 py-2 text-right">{IDR(d.discount)}</td>
-                    <td className="px-3 py-2 text-right">{IDR(d.subtotal)}</td>
+            <div>
+              <p className="font-semibold text-gray-700 text-xs mb-2">Item Produk:</p>
+              <table className="min-w-full border text-xs">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-3 py-2 text-left font-medium text-gray-500">Produk</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-500">Qty</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-500">Harga Satuan</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-500">Diskon</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-500">Subtotal</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {viewModal.details && viewModal.details.length > 0 ? (
+                    viewModal.details.map((d) => (
+                      <tr key={d.id}>
+                        <td className="px-3 py-2 font-medium text-gray-900">{d.product?.nama_produk ?? '-'}</td>
+                        <td className="px-3 py-2 text-right">{Number(d.quantity)} {d.product?.unit?.symbol || d.product?.unit?.name || ''}</td>
+                        <td className="px-3 py-2 text-right">{IDR(d.unit_price)}</td>
+                        <td className="px-3 py-2 text-right text-red-500">{Number(d.discount) > 0 ? `-${IDR(d.discount)}` : '-'}</td>
+                        <td className="px-3 py-2 text-right font-medium">{IDR(d.subtotal)}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="px-3 py-3 text-center text-gray-400">
+                        Tidak ada detail produk
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="border-t pt-3 space-y-1 text-xs">
+              <div className="flex justify-between text-gray-600">
+                <span>Subtotal:</span>
+                <span className="font-medium">{IDR(viewModal.subtotal)}</span>
+              </div>
+              {Number(viewModal.discount) > 0 && (
+                <div className="flex justify-between text-red-600">
+                  <span>Diskon Tambahan:</span>
+                  <span className="font-medium">-{IDR(viewModal.discount)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-gray-600">
+                <span>PPN (12%):</span>
+                <span className="font-medium">+{IDR(viewModal.tax)}</span>
+              </div>
+              <div className="flex justify-between text-base font-bold text-indigo-700 border-t pt-1.5">
+                <span>Total:</span>
+                <span>{IDR(viewModal.total)}</span>
+              </div>
+              <div className="flex justify-between text-gray-700 pt-1">
+                <span>Jumlah Bayar:</span>
+                <span className="font-medium">{IDR(viewModal.payment_amount)}</span>
+              </div>
+              <div className="flex justify-between text-green-700 font-semibold">
+                <span>Kembalian:</span>
+                <span>{IDR(viewModal.change_amount)}</span>
+              </div>
+            </div>
           </div>
         </Modal>
       )}

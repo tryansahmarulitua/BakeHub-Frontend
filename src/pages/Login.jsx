@@ -33,7 +33,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">BakeHub</h1>
-          <p className="text-center text-gray-600 mb-8">ERP untuk Toko Roti</p>
+          <p className="text-center text-gray-600 mb-8">ERP</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
@@ -76,10 +76,6 @@ export default function Login() {
               {loading ? 'Loading...' : 'Login'}
             </button>
           </form>
-
-          <p className="text-center text-gray-600 text-sm mt-4">
-            Demo: admin@bakehub.com / password
-          </p>
         </div>
       </div>
     </div>

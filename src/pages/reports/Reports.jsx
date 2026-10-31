@@ -19,10 +19,9 @@ export default function Reports() {
   const [toast, setToast] = useState(null);
 
   const now = new Date().toISOString().split('T')[0];
-  const firstOfMonth = now.slice(0, 7) + '-01';
 
-  const [fromDate, setFromDate] = useState(firstOfMonth);
-  const [toDate, setToDate] = useState(now);
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
   const [exporting, setExporting] = useState(false);
 
   const showToast = (msg, type = 'error') => {
@@ -44,13 +43,18 @@ export default function Reports() {
   const handleExport = async (format) => {
     setExporting(true);
     try {
-      const params = activeTab !== 'inventory' ? { from_date: fromDate, to_date: toDate } : {};
+      const params = {};
+      if (activeTab !== 'inventory') {
+        if (fromDate) params.from_date = fromDate;
+        if (toDate) params.to_date = toDate;
+      }
       const res = format === 'pdf'
         ? await reportService.exportPdf(activeTab, params)
         : await reportService.exportExcel(activeTab, params);
 
       const ext = format === 'pdf' ? 'pdf' : 'xlsx';
-      const filename = `laporan-${activeTab}-${now}.${ext}`;
+      const rangeTag = fromDate && toDate ? `${fromDate}-${toDate}` : 'semua';
+      const filename = `laporan-${activeTab}-${rangeTag}.${ext}`;
       downloadBlob(res.data, filename);
       showToast(`Laporan ${format.toUpperCase()} berhasil diunduh`, 'success');
     } catch {
@@ -68,7 +72,10 @@ export default function Reports() {
       if (activeTab === 'inventory') {
         res = await reportService.inventory();
       } else {
-        res = await reportService[activeTab]({ from_date: fromDate, to_date: toDate });
+        const params = {};
+        if (fromDate) params.from_date = fromDate;
+        if (toDate) params.to_date = toDate;
+        res = await reportService[activeTab](params);
       }
       setData(res.data.data);
     } catch {
@@ -132,6 +139,50 @@ export default function Reports() {
                         <td className="py-1.5 text-right text-green-600">{IDR(p.revenue)}</td>
                       </tr>
                     ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-5">
+              <h3 className="font-semibold mb-3">Daftar Transaksi Penjualan</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead className="bg-gray-50">
+                    <tr className="text-xs text-gray-500 border-b">
+                      <th className="px-3 py-2 text-left">No</th>
+                      <th className="px-3 py-2 text-left">No Invoice</th>
+                      <th className="px-3 py-2 text-left">Tanggal</th>
+                      <th className="px-3 py-2 text-left">Customer</th>
+                      <th className="px-3 py-2 text-left">Pembayaran</th>
+                      <th className="px-3 py-2 text-right">Total (Rp)</th>
+                      <th className="px-3 py-2 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(data.sales ?? []).length > 0 ? (
+                      data.sales.map((s, idx) => (
+                        <tr key={s.id} className="border-b last:border-0 hover:bg-gray-50">
+                          <td className="px-3 py-2 text-gray-500">{idx + 1}</td>
+                          <td className="px-3 py-2 font-medium text-gray-900">{s.invoice_number}</td>
+                          <td className="px-3 py-2 text-gray-600">{s.sale_date ? String(s.sale_date).split('T')[0] : '-'}</td>
+                          <td className="px-3 py-2">{s.customer?.nama ?? 'Umum / Walk-in'}</td>
+                          <td className="px-3 py-2 capitalize">{s.payment_method?.replace('_', ' ')}</td>
+                          <td className="px-3 py-2 text-right font-medium text-green-600">{IDR(s.total)}</td>
+                          <td className="px-3 py-2 text-center">
+                            <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 capitalize">
+                              {s.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={7} className="px-3 py-6 text-center text-gray-400">
+                          Tidak ada transaksi penjualan pada periode ini
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -291,7 +342,7 @@ export default function Reports() {
       {/* Action / Filter bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         {activeTab !== 'inventory' ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-wrap">
             <label className="text-sm text-gray-600">Dari:</label>
             <input
               type="date"
@@ -310,8 +361,22 @@ export default function Reports() {
               onClick={load}
               className="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition"
             >
-              Tampilkan
+              Filter
             </button>
+            {(fromDate || toDate) && (
+              <button
+                onClick={() => { setFromDate(''); setToDate(''); }}
+                className="px-3 py-1.5 border border-gray-300 text-gray-600 text-sm rounded hover:bg-gray-100 transition"
+                title="Tampilkan semua data tanpa batasan tanggal"
+              >
+                Reset (Semua)
+              </button>
+            )}
+            {!fromDate && !toDate && (
+              <span className="text-xs text-indigo-700 font-medium bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+                Menampilkan Semua Data
+              </span>
+            )}
           </div>
         ) : (
           <div className="text-xs text-gray-500 italic">

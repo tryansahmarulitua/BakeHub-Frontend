@@ -129,6 +129,16 @@ export default function Recipes() {
     load();
   };
 
+  const handleView = async (row) => {
+    setViewModal(row);
+    try {
+      const res = await recipeService.get(row.id);
+      if (res.data?.data) setViewModal(res.data.data);
+    } catch {
+      // fallback
+    }
+  };
+
   const handleCalc = async (e) => {
     e.preventDefault();
     setCalcLoading(true);
@@ -192,7 +202,7 @@ export default function Recipes() {
       key: 'actions', label: 'Aksi',
       render: (r) => (
         <div className="flex items-center gap-2 whitespace-nowrap min-w-[200px]">
-          <button onClick={() => setViewModal(r)} className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-medium transition">Detail</button>
+          <button onClick={() => handleView(r)} className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-medium transition">Detail</button>
           <button onClick={() => { setCalcModal(r); setCalcQty(''); setCalcResult([]); }} className="px-2 py-0.5 rounded bg-purple-50 text-purple-600 hover:bg-purple-100 text-xs font-medium transition">Simulasi</button>
           <button onClick={() => openEdit(r)} className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs font-medium transition">Edit</button>
           <button onClick={() => handleDelete(r)} className="px-2 py-0.5 rounded bg-red-50 text-red-600 hover:bg-red-100 text-xs font-medium transition">Hapus</button>
@@ -370,9 +380,9 @@ export default function Recipes() {
                   {viewModal.details?.map((d) => (
                     <tr key={d.id} className="border-t">
                       <td className="px-3 py-2 font-medium">{d.raw_material?.nama_bahan}</td>
-                      <td className="px-3 py-2 text-right">{d.quantity}</td>
+                      <td className="px-3 py-2 text-right">{Math.round(Number(d.quantity || 0))}</td>
                       <td className="px-3 py-2">{d.unit?.name}</td>
-                      <td className="px-3 py-2 text-right">{IDR(d.raw_material?.harga_beli)}/{d.raw_material?.unit?.name ?? ''}</td>
+                      <td className="px-3 py-2 text-right">{IDR(d.raw_material?.harga_beli ?? 0)}</td>
                     </tr>
                   ))}
                 </tbody>

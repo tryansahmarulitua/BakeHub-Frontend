@@ -115,6 +115,16 @@ export default function GoodsReceipts() {
     }
   };
 
+  const handleView = async (row) => {
+    setViewModal(row);
+    try {
+      const res = await goodsReceiptService.get(row.id);
+      if (res.data?.data) setViewModal(res.data.data);
+    } catch {
+      // fallback to row
+    }
+  };
+
   const columns = [
     { key: 'nomor_gr', label: 'Nomor GR' },
     { key: 'po', label: 'Nomor PO', render: (r) => r.purchase_order?.nomor_po ?? '-' },
@@ -126,7 +136,7 @@ export default function GoodsReceipts() {
       label: 'Aksi',
       render: (r) => (
         <div className="flex gap-2">
-          <button onClick={() => setViewModal(r)} className="text-blue-600 hover:underline">Detail</button>
+          <button onClick={() => handleView(r)} className="text-blue-600 hover:underline">Detail</button>
           {r.status === 'draft' && (
             <button onClick={() => handleComplete(r.id)} className="text-green-600 hover:underline">Konfirmasi</button>
           )}
@@ -235,30 +245,45 @@ export default function GoodsReceipts() {
       {viewModal && (
         <Modal title={`Detail ${viewModal.nomor_gr}`} onClose={() => setViewModal(null)}>
           <div className="space-y-3 text-sm">
-            <p><strong>PO:</strong> {viewModal.purchase_order?.nomor_po}</p>
-            <p><strong>Supplier:</strong> {viewModal.purchase_order?.supplier?.nama_supplier}</p>
+            <p><strong>PO:</strong> {viewModal.purchase_order?.nomor_po ?? '-'}</p>
+            <p><strong>Supplier:</strong> {viewModal.purchase_order?.supplier?.nama_supplier ?? '-'}</p>
             <p><strong>Tanggal Terima:</strong> {viewModal.tanggal_terima}</p>
+            {viewModal.receiver?.name && (
+              <p><strong>Diterima Oleh:</strong> {viewModal.receiver.name}</p>
+            )}
             <p><strong>Status:</strong> <Badge value={viewModal.status} map={STATUS_MAP} /></p>
             <p><strong>Catatan:</strong> {viewModal.catatan || '-'}</p>
 
             <table className="min-w-full divide-y divide-gray-200 mt-3 border text-xs">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-2 py-1 text-left">Bahan</th>
-                  <th className="px-2 py-1 text-right">Dipesan</th>
-                  <th className="px-2 py-1 text-right">Diterima</th>
-                  <th className="px-2 py-1 text-right">Ditolak</th>
+                  <th className="px-2 py-1 text-left font-medium text-gray-500">Bahan</th>
+                  <th className="px-2 py-1 text-center font-medium text-gray-500">Satuan</th>
+                  <th className="px-2 py-1 text-right font-medium text-gray-500">Dipesan</th>
+                  <th className="px-2 py-1 text-right font-medium text-gray-500">Diterima</th>
+                  <th className="px-2 py-1 text-right font-medium text-gray-500">Ditolak</th>
+                  <th className="px-2 py-1 text-center font-medium text-gray-500">Kedaluwarsa</th>
                 </tr>
               </thead>
-              <tbody>
-                {viewModal.details?.map((d) => (
-                  <tr key={d.id}>
-                    <td className="px-2 py-1">{d.raw_material?.nama_bahan}</td>
-                    <td className="px-2 py-1 text-right">{d.quantity_ordered}</td>
-                    <td className="px-2 py-1 text-right">{d.quantity_received}</td>
-                    <td className="px-2 py-1 text-right">{d.quantity_rejected}</td>
+              <tbody className="divide-y divide-gray-200">
+                {viewModal.details && viewModal.details.length > 0 ? (
+                  viewModal.details.map((d) => (
+                    <tr key={d.id}>
+                      <td className="px-2 py-1 font-medium text-gray-900">{d.raw_material?.nama_bahan ?? '-'}</td>
+                      <td className="px-2 py-1 text-center text-gray-500">{d.raw_material?.unit?.symbol || d.raw_material?.unit?.name || '-'}</td>
+                      <td className="px-2 py-1 text-right">{d.quantity_ordered}</td>
+                      <td className="px-2 py-1 text-right text-green-600 font-medium">{d.quantity_received}</td>
+                      <td className="px-2 py-1 text-right text-red-600">{d.quantity_rejected}</td>
+                      <td className="px-2 py-1 text-center text-gray-500">{d.expired_date ? String(d.expired_date).split('T')[0] : '-'}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="px-2 py-3 text-center text-gray-400">
+                      Tidak ada detail item
+                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

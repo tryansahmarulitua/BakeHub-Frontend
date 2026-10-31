@@ -5,7 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 const ALL = ['Owner', 'Admin', 'Staff Gudang', 'Staff Produksi', 'Kasir'];
 
 const menuItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: '📊', roles: ALL },
+  { path: '/dashboard', label: 'Dashboard', icon: '📊', roles: ['Owner', 'Admin'] },
   {
     label: 'Master Data',
     icon: '📁',
@@ -59,18 +59,10 @@ const menuItems = [
   {
     label: 'Return & Waste',
     icon: '🗑️',
-    roles: ['Admin', 'Staff Gudang', 'Staff Produksi'],
+    roles: ['Admin', 'Staff Gudang', 'Staff Produksi', 'Kasir'],
     children: [
       { path: '/returns', label: 'Return' },
       { path: '/waste', label: 'Waste' },
-    ],
-  },
-  {
-    label: 'Return Penjualan',
-    icon: '↩️',
-    roles: ['Admin', 'Kasir'],
-    children: [
-      { path: '/returns', label: 'Return Penjualan' },
     ],
   },
   { path: '/reports', label: 'Laporan', icon: '📈', roles: ['Owner', 'Admin'] },
