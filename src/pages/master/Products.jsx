@@ -13,7 +13,7 @@ const STATUS_MAP = {
 
 const EMPTY = {
   kode_produk: '', nama_produk: '', category_id: '', unit_id: '',
-  harga_jual: '', harga_modal: '', stok: '', tanggal_kedaluwarsa: '', status: 'aktif',
+  harga_jual: '', harga_modal: 0, stok: '', tanggal_kedaluwarsa: '', status: 'aktif',
 };
 
 const IDR = (v) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(v);
@@ -174,13 +174,9 @@ export default function Products() {
                 </Select>
               </FormField>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <FormField label="Harga Jual" error={errors.harga_jual?.[0]}>
                 <Input type="number" min="0" value={form.harga_jual} onChange={set('harga_jual')} required />
-              </FormField>
-              <FormField label="Harga Modal (HPP)" error={errors.harga_modal?.[0]}>
-                <Input type="number" min="0" value={form.harga_modal} onChange={set('harga_modal')} required />
-                <span className="text-[10px] text-gray-400 block mt-0.5">*Otomatis disinkronkan dari Resep</span>
               </FormField>
               <FormField label="Stok" error={errors.stok?.[0]}>
                 <Input type="number" min="0" value={form.stok} onChange={set('stok')} required />

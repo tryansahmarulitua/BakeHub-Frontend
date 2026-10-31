@@ -103,6 +103,16 @@ export default function PurchaseOrders() {
     }
   };
 
+  const handleView = async (row) => {
+    setViewModal(row);
+    try {
+      const res = await purchaseOrderService.get(row.id);
+      if (res.data?.data) setViewModal(res.data.data);
+    } catch {
+      // fallback to row
+    }
+  };
+
   const columns = [
     { key: 'nomor_po', label: 'Nomor PO' },
     { key: 'supplier', label: 'Supplier', render: (r) => r.supplier?.nama_supplier ?? '-' },
@@ -114,7 +124,7 @@ export default function PurchaseOrders() {
       label: 'Aksi',
       render: (r) => (
         <div className="flex gap-2">
-          <button onClick={() => setViewModal(r)} className="text-blue-600 hover:underline">Detail</button>
+          <button onClick={() => handleView(r)} className="text-blue-600 hover:underline">Detail</button>
           {r.status === 'draft' && (
             <button onClick={() => action(purchaseOrderService.submit, r.id, 'PO disubmit')} className="text-yellow-600 hover:underline">Submit</button>
           )}
@@ -238,14 +248,22 @@ export default function PurchaseOrders() {
                 </tr>
               </thead>
               <tbody>
-                {viewModal.details?.map((d) => (
-                  <tr key={d.id}>
-                    <td className="px-3 py-2">{d.raw_material?.nama_bahan}</td>
-                    <td className="px-3 py-2 text-right">{d.quantity}</td>
-                    <td className="px-3 py-2 text-right">{IDR(d.unit_price)}</td>
-                    <td className="px-3 py-2 text-right">{IDR(d.subtotal)}</td>
+                {viewModal.details && viewModal.details.length > 0 ? (
+                  viewModal.details.map((d) => (
+                    <tr key={d.id}>
+                      <td className="px-3 py-2">{d.raw_material?.nama_bahan ?? '-'}</td>
+                      <td className="px-3 py-2 text-right">{d.quantity}</td>
+                      <td className="px-3 py-2 text-right">{IDR(d.unit_price)}</td>
+                      <td className="px-3 py-2 text-right">{IDR(d.subtotal)}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="px-3 py-3 text-center text-gray-400">
+                      Tidak ada detail bahan
+                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
 
