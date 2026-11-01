@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { productionService, productService, recipeService } from '../../services/api';
 import {
-  PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast,
+  PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast, formatDate,
 } from '../../components/ui';
 import ProductPicker from '../../components/ProductPicker';
 
@@ -189,7 +189,7 @@ export default function Productions() {
               <p><strong>Produk:</strong> {viewModal.product?.nama_produk}</p>
               <p><strong>Resep:</strong> {viewModal.recipe?.name}</p>
               <p><strong>Qty:</strong> {viewModal.quantity} pcs</p>
-              <p><strong>Tanggal:</strong> {viewModal.production_date}</p>
+              <p><strong>Tanggal:</strong> {formatDate(viewModal.production_date)}</p>
               <p><strong>Status:</strong> <Badge value={viewModal.status} map={STATUS_MAP} /></p>
             </div>
 

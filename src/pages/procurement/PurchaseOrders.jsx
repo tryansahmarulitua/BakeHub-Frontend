@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { purchaseOrderService, supplierService, rawMaterialService } from '../../services/api';
 import {
   PageHeader, SearchInput, Table, Pagination,
-  Modal, FormField, Input, Select, Badge, Toast,
+  Modal, FormField, Input, Select, Badge, Toast, formatDate,
 } from '../../components/ui';
 
 const STATUS_MAP = {
@@ -234,7 +234,7 @@ export default function PurchaseOrders() {
         <Modal title={`Detail ${viewModal.nomor_po}`} onClose={() => setViewModal(null)}>
           <div className="space-y-3 text-sm">
             <p><strong>Supplier:</strong> {viewModal.supplier?.nama_supplier}</p>
-            <p><strong>Tanggal:</strong> {viewModal.tanggal_po}</p>
+            <p><strong>Tanggal:</strong> {formatDate(viewModal.tanggal_po)}</p>
             <p><strong>Status:</strong> <Badge value={viewModal.status} map={STATUS_MAP} /></p>
             <p><strong>Catatan:</strong> {viewModal.catatan || '-'}</p>
 

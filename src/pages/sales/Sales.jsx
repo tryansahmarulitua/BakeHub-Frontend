@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { salesService, productService, customerService } from '../../services/api';
 import {
   PageHeader, SearchInput, Table, Pagination,
-  Modal, FormField, Input, Select, Badge, Toast,
+  Modal, FormField, Input, Select, Badge, Toast, formatDate,
 } from '../../components/ui';
 import ProductPicker from '../../components/ProductPicker';
 
@@ -287,7 +287,7 @@ export default function Sales() {
           <div className="space-y-4 text-sm">
             <div className="grid grid-cols-2 gap-3 bg-gray-50 p-3 rounded-lg text-xs">
               <p><strong>Customer:</strong> {viewModal.customer?.nama ?? 'Umum / Walk-in'}</p>
-              <p><strong>Tanggal:</strong> {viewModal.sale_date ? String(viewModal.sale_date).split('T')[0] : '-'}</p>
+              <p><strong>Tanggal:</strong> {formatDate(viewModal.sale_date)}</p>
               <p><strong>Kasir:</strong> {viewModal.creator?.name ?? '-'}</p>
               <p><strong>Metode:</strong> <Badge value={viewModal.payment_method} map={PAYMENT_MAP} /></p>
               <p><strong>Status:</strong> <Badge value={viewModal.status} map={STATUS_MAP} /></p>

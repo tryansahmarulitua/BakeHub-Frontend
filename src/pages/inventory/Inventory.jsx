@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { inventoryService, rawMaterialService, productService } from '../../services/api';
 import {
   PageHeader, SearchInput, Table, Pagination,
-  Modal, FormField, Input, Select, Badge, Toast,
+  Modal, FormField, Input, Select, Badge, Toast, formatDate,
 } from '../../components/ui';
 import StockAdjustmentModal from './StockAdjustmentModal';
 
@@ -153,10 +153,7 @@ export default function Inventory() {
                 {
                   key: 'tanggal_kedaluwarsa',
                   label: 'Tgl Kedaluwarsa',
-                  render: (r) => {
-                    if (!r.tanggal_kedaluwarsa) return <span className="text-gray-400 italic">-</span>;
-                    return r.tanggal_kedaluwarsa.split('T')[0];
-                  },
+                  render: (r) => formatDate(r.tanggal_kedaluwarsa),
                 },
                 { key: 'harga_jual', label: 'Harga Jual', render: (r) => IDR(r.harga_jual) },
                 { key: 'harga_modal', label: 'Harga Modal', render: (r) => IDR(r.harga_modal) },
@@ -236,10 +233,7 @@ export default function Inventory() {
               {
                 key: 'tanggal_kedaluwarsa',
                 label: 'Tgl Kedaluwarsa',
-                render: (r) => {
-                  if (!r.tanggal_kedaluwarsa) return <span className="text-gray-400 italic">Belum diatur</span>;
-                  return r.tanggal_kedaluwarsa.split('T')[0];
-                },
+                render: (r) => formatDate(r.tanggal_kedaluwarsa),
               },
               {
                 key: 'status_kedaluwarsa',

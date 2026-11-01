@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { productService, categoryService, unitService } from '../../services/api';
 import {
   PageHeader, SearchInput, Table, Pagination,
-  Modal, FormField, Input, Select, Badge, Toast,
+  Modal, FormField, Input, Select, Badge, Toast, formatDate,
 } from '../../components/ui';
 import { useAuth } from '../../auth/AuthContext';
 
@@ -113,13 +113,13 @@ export default function Products() {
       label: 'Tgl Kedaluwarsa',
       render: (r) => {
         if (!r.tanggal_kedaluwarsa) return <span className="text-gray-400 italic">-</span>;
-        const targetDate = new Date(r.tanggal_kedaluwarsa.split('T')[0]);
+        const targetDate = new Date(String(r.tanggal_kedaluwarsa).split('T')[0]);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         targetDate.setHours(0, 0, 0, 0);
         const days = Math.round((targetDate - today) / (1000 * 60 * 60 * 24));
         const cls = days < 0 ? 'text-red-600 font-semibold' : days <= 7 ? 'text-orange-600 font-medium' : 'text-gray-700';
-        return <span className={cls}>{r.tanggal_kedaluwarsa.split('T')[0]} ({days < 0 ? 'Expired' : `${days}d`})</span>;
+        return <span className={cls}>{formatDate(r.tanggal_kedaluwarsa)} ({days < 0 ? 'Expired' : `${days}d`})</span>;
       },
     },
     { key: 'harga_jual', label: 'Harga Jual', render: (r) => IDR(r.harga_jual) },

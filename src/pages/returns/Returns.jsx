@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { returnService, salesService, purchaseOrderService, productService, rawMaterialService } from '../../services/api';
 import {
-  PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast,
+  PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast, formatDate,
 } from '../../components/ui';
 
 const STATUS_MAP = {
@@ -142,8 +142,8 @@ export default function Returns() {
                   {(form.return_type === 'sales_return' ? sales : purchaseOrders).map((ref) => (
                     <option key={ref.id} value={ref.id}>
                       {form.return_type === 'sales_return'
-                        ? `${ref.invoice_number} — ${ref.customer?.nama ?? 'Umum'} (${ref.sale_date})`
-                        : `${ref.nomor_po} — ${ref.supplier?.nama_supplier ?? '-'} (${ref.tanggal_po})`}
+                        ? `${ref.invoice_number} — ${ref.customer?.nama ?? 'Umum'} (${formatDate(ref.sale_date)})`
+                        : `${ref.nomor_po} — ${ref.supplier?.nama_supplier ?? '-'} (${formatDate(ref.tanggal_po)})`}
                     </option>
                   ))}
                 </Select>
@@ -242,7 +242,7 @@ export default function Returns() {
         <Modal title={`Detail ${viewModal.return_number}`} onClose={() => setViewModal(null)}>
           <div className="space-y-2 text-sm">
             <p><strong>Tipe:</strong> <Badge value={viewModal.return_type} map={TYPE_MAP} /></p>
-            <p><strong>Tanggal:</strong> {viewModal.return_date}</p>
+            <p><strong>Tanggal:</strong> {formatDate(viewModal.return_date)}</p>
             <p><strong>Alasan:</strong> {viewModal.reason}</p>
             <p><strong>Status:</strong> <Badge value={viewModal.status} map={STATUS_MAP} /></p>
             <p><strong>Item:</strong> {viewModal.details?.length ?? 0} item</p>

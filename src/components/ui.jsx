@@ -30,6 +30,17 @@ export function SearchInput({ value, onChange, placeholder = 'Cari...' }) {
   );
 }
 
+export function formatDate(val) {
+  if (!val) return '-';
+  const str = String(val).trim();
+  const match = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (match) {
+    const [, y, m, d] = match;
+    return `${d}-${m}-${y}`;
+  }
+  return str;
+}
+
 export function Table({ columns, data, onEdit, onDelete }) {
   return (
     <div className="bg-white rounded-lg shadow overflow-x-auto">
@@ -64,11 +75,17 @@ export function Table({ columns, data, onEdit, onDelete }) {
           ) : (
             data.map((row, idx) => (
               <tr key={row.id ?? idx} className="hover:bg-gray-50">
-                {columns.map((col) => (
-                  <td key={col.key} className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
-                    {col.render ? col.render(row) : row[col.key]}
-                  </td>
-                ))}
+                {columns.map((col) => {
+                  let content = col.render ? col.render(row) : row[col.key];
+                  if (!col.render && typeof content === 'string' && /^\d{4}-\d{2}-\d{2}(T|\s|$)/.test(content)) {
+                    content = formatDate(content);
+                  }
+                  return (
+                    <td key={col.key} className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+                      {content}
+                    </td>
+                  );
+                })}
                 {(onEdit || onDelete) && (
                   <td className="px-6 py-4 text-sm whitespace-nowrap space-x-2">
                     {onEdit && (

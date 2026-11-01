@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { goodsReceiptService, purchaseOrderService } from '../../services/api';
 import {
-  PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast,
+  PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast, formatDate,
 } from '../../components/ui';
 
 const STATUS_MAP = {
@@ -247,7 +247,7 @@ export default function GoodsReceipts() {
           <div className="space-y-3 text-sm">
             <p><strong>PO:</strong> {viewModal.purchase_order?.nomor_po ?? '-'}</p>
             <p><strong>Supplier:</strong> {viewModal.purchase_order?.supplier?.nama_supplier ?? '-'}</p>
-            <p><strong>Tanggal Terima:</strong> {viewModal.tanggal_terima}</p>
+            <p><strong>Tanggal Terima:</strong> {formatDate(viewModal.tanggal_terima)}</p>
             {viewModal.receiver?.name && (
               <p><strong>Diterima Oleh:</strong> {viewModal.receiver.name}</p>
             )}
@@ -274,7 +274,7 @@ export default function GoodsReceipts() {
                       <td className="px-2 py-1 text-right">{d.quantity_ordered}</td>
                       <td className="px-2 py-1 text-right text-green-600 font-medium">{d.quantity_received}</td>
                       <td className="px-2 py-1 text-right text-red-600">{d.quantity_rejected}</td>
-                      <td className="px-2 py-1 text-center text-gray-500">{d.expired_date ? String(d.expired_date).split('T')[0] : '-'}</td>
+                      <td className="px-2 py-1 text-center text-gray-500">{formatDate(d.expired_date)}</td>
                     </tr>
                   ))
                 ) : (

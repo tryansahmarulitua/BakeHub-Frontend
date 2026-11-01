@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { reportService } from '../../services/api';
-import { PageHeader, Toast } from '../../components/ui';
+import { PageHeader, Toast, formatDate } from '../../components/ui';
 
 const IDR = (v) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(v);
 const NUM = (v) => new Intl.NumberFormat('id-ID').format(v);
@@ -165,7 +165,7 @@ export default function Reports() {
                         <tr key={s.id} className="border-b last:border-0 hover:bg-gray-50">
                           <td className="px-3 py-2 text-gray-500">{idx + 1}</td>
                           <td className="px-3 py-2 font-medium text-gray-900">{s.invoice_number}</td>
-                          <td className="px-3 py-2 text-gray-600">{s.sale_date ? String(s.sale_date).split('T')[0] : '-'}</td>
+                          <td className="px-3 py-2 text-gray-600">{formatDate(s.sale_date)}</td>
                           <td className="px-3 py-2">{s.customer?.nama ?? 'Umum / Walk-in'}</td>
                           <td className="px-3 py-2 capitalize">{s.payment_method?.replace('_', ' ')}</td>
                           <td className="px-3 py-2 text-right font-medium text-green-600">{IDR(s.total)}</td>
@@ -227,7 +227,7 @@ export default function Reports() {
                       <td className="px-4 py-2">{r.unit?.name}</td>
                       <td className="px-4 py-2">{IDR(r.harga_beli)}</td>
                       <td className="px-4 py-2 text-indigo-600">{IDR(r.nilai_stok)}</td>
-                      <td className="px-4 py-2 text-red-500">{r.tanggal_kedaluwarsa ?? '-'}</td>
+                      <td className="px-4 py-2 text-red-500">{formatDate(r.tanggal_kedaluwarsa)}</td>
                     </tr>
                   ))}
                 </tbody>
