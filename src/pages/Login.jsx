@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { authService } from '../services/api';
+import bgImage from '../assets/BakeHUB Bakery Welcome Scene.png';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -30,11 +31,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">BakeHub</h1>
-          <p className="text-center text-gray-600 mb-8">ERP</p>
+    <div 
+      className="min-h-screen flex items-center justify-center relative"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-lg p-8 border border-white/30">
+          <h1 className="text-3xl font-bold text-center text-white mb-2">BakeHub</h1>
+          <p className="text-center text-white/80 mb-8">ERP</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
@@ -44,7 +53,7 @@ export default function Login() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Email
               </label>
               <input
@@ -52,13 +61,13 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@bakehub.web.id"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-white/40 rounded-lg bg-white/20 text-white placeholder-white/60 focus:ring-2 focus:ring-white/60 focus:border-transparent outline-none"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Password
               </label>
               <div className="relative">
@@ -67,13 +76,13 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Your Password"
-                  className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 pr-10 border border-white/40 rounded-lg bg-white/20 text-white placeholder-white/60 focus:ring-2 focus:ring-white/60 focus:border-transparent outline-none"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/60 hover:text-white/80 cursor-pointer"
                   aria-label={showPassword ? 'Sembunyikan password' : 'Lihat password'}
                 >
                   {showPassword ? (
