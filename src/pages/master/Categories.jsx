@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { categoryService } from '../../services/api';
 import {
   PageHeader, Table, Modal, FormField, Input, Select, Badge, Toast,
@@ -89,7 +89,7 @@ export default function Categories() {
             </FormField>
             <div className="flex gap-2 justify-end pt-2">
               <button type="button" onClick={closeModal} className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">Batal</button>
-              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50">
+              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-[#800020] text-white rounded-lg hover:bg-[#4d0013] disabled:opacity-50">
                 {loading ? 'Menyimpan...' : 'Simpan'}
               </button>
             </div>
@@ -99,3 +99,4 @@ export default function Categories() {
     </div>
   );
 }
+

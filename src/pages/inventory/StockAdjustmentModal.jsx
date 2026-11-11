@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { inventoryService } from '../../services/api';
 import { Modal, FormField, Input, Select } from '../../components/ui';
 
@@ -62,7 +62,7 @@ export default function StockAdjustmentModal({ onClose, onSuccess, rawMaterials 
                 value={form.item_id}
                 onChange={set('item_id')}
                 required
-                className={`w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-indigo-400 ${
+                className={`w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-[#800020] ${
                   errors.item_id?.[0] ? 'border-red-400' : 'border-gray-300'
                 }`}
               >
@@ -85,7 +85,7 @@ export default function StockAdjustmentModal({ onClose, onSuccess, rawMaterials 
           </div>
           {selectedItem && (
             <p className="text-xs text-gray-500 mt-1">
-              Stok saat ini: <span className="font-medium text-indigo-700">{selectedItem.stok}</span>
+              Stok saat ini: <span className="font-medium text-[#4d0013]">{selectedItem.stok}</span>
             </p>
           )}
         </FormField>
@@ -132,7 +132,7 @@ export default function StockAdjustmentModal({ onClose, onSuccess, rawMaterials 
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+            className="px-4 py-2 text-sm bg-[#800020] text-white rounded-lg hover:bg-[#4d0013] disabled:opacity-50"
           >
             {loading ? 'Menyimpan...' : 'Simpan Adjustment'}
           </button>
@@ -141,3 +141,4 @@ export default function StockAdjustmentModal({ onClose, onSuccess, rawMaterials 
     </Modal>
   );
 }
+

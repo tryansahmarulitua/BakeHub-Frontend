@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { supplierService } from '../../services/api';
 import {
   PageHeader, SearchInput, Table, Pagination,
@@ -138,7 +138,7 @@ export default function Suppliers() {
                 onChange={set('alamat')}
                 rows={3}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#800020]"
               />
             </FormField>
             <FormField label="Status">
@@ -150,7 +150,7 @@ export default function Suppliers() {
 
             <div className="flex gap-2 justify-end pt-2">
               <button type="button" onClick={closeModal} className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">Batal</button>
-              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50">
+              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-[#800020] text-white rounded-lg hover:bg-[#4d0013] disabled:opacity-50">
                 {loading ? 'Menyimpan...' : 'Simpan'}
               </button>
             </div>
@@ -160,3 +160,4 @@ export default function Suppliers() {
     </div>
   );
 }
+

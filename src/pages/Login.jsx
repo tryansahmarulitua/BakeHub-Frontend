@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { authService } from '../services/api';
@@ -102,7 +102,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-medium py-2 rounded-lg transition"
+              className="w-full bg-[#800020] hover:bg-[#4d0013] disabled:bg-gray-400 text-white font-medium py-2 rounded-lg transition"
             >
               {loading ? 'Loading...' : 'Login'}
             </button>
@@ -112,3 +112,4 @@ export default function Login() {
     </div>
   );
 }
+

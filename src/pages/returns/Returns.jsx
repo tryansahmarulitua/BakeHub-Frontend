@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { returnService, salesService, purchaseOrderService, productService, rawMaterialService } from '../../services/api';
 import {
   PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast, formatDate,
@@ -162,7 +162,7 @@ export default function Returns() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="text-sm font-medium text-gray-700">Item</label>
-                <button type="button" onClick={addRow} className="text-xs text-indigo-600 hover:underline">+ Tambah</button>
+                <button type="button" onClick={addRow} className="text-xs text-[#800020] hover:underline">+ Tambah</button>
               </div>
               {form.details.map((d, i) => {
                 const itemList = d.item_type === 'product' ? products : rawMaterials;
@@ -192,7 +192,7 @@ export default function Returns() {
                           value={d.item_id}
                           onChange={(e) => updateRow(i, 'item_id', e.target.value)}
                           required
-                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#800020]"
                         >
                           <option value="">— Kode —</option>
                           {itemList.map((x) => (
@@ -230,7 +230,7 @@ export default function Returns() {
 
             <div className="flex gap-2 justify-end pt-2 border-t">
               <button type="button" onClick={() => setModal(false)} className="px-4 py-2 text-sm border rounded">Batal</button>
-              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-indigo-600 text-white rounded disabled:opacity-50">
+              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-[#800020] text-white rounded disabled:opacity-50">
                 {loading ? 'Menyimpan...' : 'Buat Return'}
               </button>
             </div>
@@ -252,3 +252,4 @@ export default function Returns() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { reportService } from '../services/api';
 import { Toast } from '../components/ui';
 
@@ -7,12 +7,12 @@ const NUM = (v) => new Intl.NumberFormat('id-ID').format(v);
 
 function KPICard({ label, value, sub, color = 'indigo' }) {
   const colors = {
-    indigo: 'bg-indigo-500', green: 'bg-green-500',
+    indigo: 'bg-[#800020]', green: 'bg-green-500',
     red: 'bg-red-500', yellow: 'bg-yellow-500',
     blue: 'bg-blue-500', purple: 'bg-purple-500',
   };
   return (
-    <div className="bg-white rounded-lg shadow p-5 flex items-center gap-4">
+    <div className="glass rounded-lg p-5 flex items-center gap-4">
       <div className={`w-3 rounded-full h-16 ${colors[color]}`} />
       <div>
         <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">{label}</p>
@@ -50,13 +50,13 @@ export default function Dashboard() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-500 text-sm">BakeHub ERP</p>
+          <h1 className="text-2xl font-bold" style={{ color: '#4d0013' }}>Dashboard</h1>
+          <p style={{ color: '#a0003f' }} className="text-sm">BakeHub ERP</p>
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600">Periode:</label>
+          <label className="text-sm" style={{ color: '#800020' }}>Periode:</label>
           <input type="month" value={month} onChange={(e) => setMonth(e.target.value)}
-            className="px-3 py-1.5 border rounded text-sm" />
+            className="glass px-3 py-1.5 border rounded text-sm border-white/60 outline-none focus:ring-2 focus:ring-[#800020]" />
         </div>
       </div>
 
@@ -88,7 +88,7 @@ export default function Dashboard() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-5">
+        <div className="glass rounded-lg p-5">
           <h2 className="font-semibold text-gray-700 mb-4">Penjualan Harian</h2>
           {data.salesChart?.length > 0 ? (
             <div className="space-y-2">
@@ -98,8 +98,8 @@ export default function Dashboard() {
                 return (
                   <div key={d.date} className="flex items-center gap-3">
                     <span className="text-xs text-gray-500 w-16 shrink-0">{d.date.slice(5)}</span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-4">
-                      <div className="bg-indigo-500 h-4 rounded-full" style={{ width: pct + '%' }} />
+                    <div className="flex-1 rounded-full bg-[#800020]/10 h-4">
+                      <div className="bg-[#800020] h-4 rounded-full" style={{ width: pct + '%' }} />
                     </div>
                     <span className="text-xs text-gray-700 w-28 text-right shrink-0">{IDR(d.total)}</span>
                   </div>
@@ -111,7 +111,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="bg-white rounded-lg shadow p-5">
+        <div className="glass rounded-lg p-5">
           <h2 className="font-semibold text-gray-700 mb-4">Produk Terlaris</h2>
           {data.topProducts?.length > 0 ? (
             <table className="min-w-full text-sm">
@@ -135,3 +135,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

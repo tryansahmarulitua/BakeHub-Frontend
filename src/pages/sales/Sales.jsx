@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { salesService, productService, customerService } from '../../services/api';
 import {
   PageHeader, SearchInput, Table, Pagination,
@@ -228,7 +228,7 @@ export default function Sales() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="text-sm font-medium text-gray-700">Item Produk</label>
-                <button type="button" onClick={addDetailRow} className="text-xs text-indigo-600 hover:underline">+ Tambah Baris</button>
+                <button type="button" onClick={addDetailRow} className="text-xs text-[#800020] hover:underline">+ Tambah Baris</button>
               </div>
               <div className="space-y-3">
                 {form.details.map((d, idx) => (
@@ -265,7 +265,7 @@ export default function Sales() {
             <div className="bg-gray-50 p-3 rounded text-sm space-y-1">
               <div className="flex justify-between py-0.5"><span>Subtotal:</span><span>{IDR(calculateTotals().subtotal)}</span></div>
               <div className="flex justify-between py-0.5 text-red-600"><span>Diskon:</span><span>-{IDR(calculateTotals().discount)}</span></div>
-              <div className="flex justify-between py-0.5 text-indigo-700 font-medium"><span>PPN (12%):</span><span>+{IDR(calculateTotals().tax)}</span></div>
+              <div className="flex justify-between py-0.5 text-[#4d0013] font-medium"><span>PPN (12%):</span><span>+{IDR(calculateTotals().tax)}</span></div>
               <div className="flex justify-between py-1 font-bold text-base border-t text-gray-900"><span>Total Tagihan:</span><span>{IDR(calculateTotals().total)}</span></div>
               <div className="flex justify-between py-0.5"><span>Bayar:</span><span>{IDR(calculateTotals().payment)}</span></div>
               <div className="flex justify-between py-0.5 font-semibold text-green-700"><span>Kembalian:</span><span>{IDR(calculateTotals().change)}</span></div>
@@ -273,7 +273,7 @@ export default function Sales() {
 
             <div className="flex gap-2 justify-end pt-2 border-t">
               <button type="button" onClick={() => setModal(false)} className="px-4 py-2 text-sm border rounded">Batal</button>
-              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-indigo-600 text-white rounded disabled:opacity-50">
+              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-[#800020] text-white rounded disabled:opacity-50">
                 {loading ? 'Menyimpan...' : 'Buat Penjualan'}
               </button>
             </div>
@@ -343,7 +343,7 @@ export default function Sales() {
                 <span>PPN (12%):</span>
                 <span className="font-medium">+{IDR(viewModal.tax)}</span>
               </div>
-              <div className="flex justify-between text-base font-bold text-indigo-700 border-t pt-1.5">
+              <div className="flex justify-between text-base font-bold text-[#4d0013] border-t pt-1.5">
                 <span>Total:</span>
                 <span>{IDR(viewModal.total)}</span>
               </div>
@@ -362,3 +362,4 @@ export default function Sales() {
     </div>
   );
 }
+

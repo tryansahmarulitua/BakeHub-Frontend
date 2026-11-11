@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { recipeService, productService, rawMaterialService, unitService } from '../../services/api';
 import {
   PageHeader, SearchInput, Table, Pagination,
@@ -192,7 +192,7 @@ export default function Recipes() {
       key: 'harga_modal_per_unit',
       label: 'Harga Modal / Kue',
       render: (r) => (
-        <span className="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
+        <span className="font-bold text-[#800020] bg-[#800020]/10 px-2 py-0.5 rounded">
           {IDR(r.harga_modal_per_unit)}
         </span>
       ),
@@ -204,7 +204,7 @@ export default function Recipes() {
         <div className="flex items-center gap-2 whitespace-nowrap min-w-[200px]">
           <button onClick={() => handleView(r)} className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-medium transition">Detail</button>
           <button onClick={() => { setCalcModal(r); setCalcQty(''); setCalcResult([]); }} className="px-2 py-0.5 rounded bg-purple-50 text-purple-600 hover:bg-purple-100 text-xs font-medium transition">Simulasi</button>
-          <button onClick={() => openEdit(r)} className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs font-medium transition">Edit</button>
+          <button onClick={() => openEdit(r)} className="px-2 py-0.5 rounded bg-[#800020]/10 text-[#800020] hover:bg-[#800020]/20 text-xs font-medium transition">Edit</button>
           <button onClick={() => handleDelete(r)} className="px-2 py-0.5 rounded bg-red-50 text-red-600 hover:bg-red-100 text-xs font-medium transition">Hapus</button>
         </div>
       ),
@@ -262,7 +262,7 @@ export default function Recipes() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="text-sm font-medium text-gray-700">Komposisi Bahan Baku (Modal Variabel)</label>
-                <button type="button" onClick={addDetailRow} className="text-xs text-indigo-600 hover:underline">+ Tambah Bahan</button>
+                <button type="button" onClick={addDetailRow} className="text-xs text-[#800020] hover:underline">+ Tambah Bahan</button>
               </div>
               <div className="space-y-2">
                 {details.map((d, i) => (
@@ -313,7 +313,7 @@ export default function Recipes() {
                 <span>Total Biaya Produksi 1 Batch:</span>
                 <span>{IDR(estimateTotalProduksi)}</span>
               </div>
-              <div className="flex justify-between items-center text-indigo-700 font-bold bg-indigo-50 p-2 rounded border border-indigo-200 text-sm">
+              <div className="flex justify-between items-center text-[#4d0013] font-bold bg-[#800020]/10 p-2 rounded border border-[#800020]/30 text-sm">
                 <span>Harga Modal per Kue ({form.output_quantity || 1} pcs):</span>
                 <span>{IDR(estimateHargaModalPerUnit)}</span>
               </div>
@@ -321,7 +321,7 @@ export default function Recipes() {
 
             <div className="flex gap-2 justify-end pt-2 border-t">
               <button type="button" onClick={() => setModal(null)} className="px-4 py-2 text-sm border rounded">Batal</button>
-              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-indigo-600 text-white rounded disabled:opacity-50">
+              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-[#800020] text-white rounded disabled:opacity-50">
                 {loading ? 'Menyimpan...' : 'Simpan'}
               </button>
             </div>
@@ -341,7 +341,7 @@ export default function Recipes() {
             </div>
 
             {/* Rincian Komponen Biaya */}
-            <div className="border rounded-lg p-3 bg-indigo-50/50 space-y-1.5 text-xs">
+            <div className="border rounded-lg p-3 bg-[#800020]/10/50 space-y-1.5 text-xs">
               <p className="font-semibold text-gray-800 text-sm mb-1">Rincian Modal Variabel:</p>
               <div className="flex justify-between">
                 <span className="text-gray-600">• Biaya Bahan Baku:</span>
@@ -359,7 +359,7 @@ export default function Recipes() {
                 <span>Total Biaya Produksi:</span>
                 <span>{IDR(viewModal.total_biaya_produksi)}</span>
               </div>
-              <div className="flex justify-between items-center font-bold text-indigo-700 bg-indigo-100/70 p-2 rounded text-sm mt-1">
+              <div className="flex justify-between items-center font-bold text-[#4d0013] bg-[#800020]/20/70 p-2 rounded text-sm mt-1">
                 <span>Harga Modal per Kue (Unit):</span>
                 <span>{IDR(viewModal.harga_modal_per_unit)}</span>
               </div>
@@ -444,3 +444,4 @@ export default function Recipes() {
     </div>
   );
 }
+

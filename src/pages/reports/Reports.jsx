@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { reportService } from '../../services/api';
 import { PageHeader, Toast, formatDate } from '../../components/ui';
 
@@ -96,22 +96,22 @@ export default function Reports() {
         return (
           <div className="space-y-6">
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Total Transaksi</p>
                 <p className="text-2xl font-bold">{NUM(data.summary?.total_transactions)}</p>
               </div>
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Total Revenue</p>
                 <p className="text-2xl font-bold text-green-600">{IDR(data.summary?.total_revenue)}</p>
               </div>
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Total Item Terjual</p>
                 <p className="text-2xl font-bold">{NUM(data.summary?.total_items)}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg shadow p-5">
+              <div className="glass rounded-lg p-5">
                 <h3 className="font-semibold mb-3">Per Metode Pembayaran</h3>
                 <table className="min-w-full text-sm">
                   <thead><tr className="text-xs text-gray-500 border-b"><th className="text-left pb-1">Metode</th><th className="text-right pb-1">Trx</th><th className="text-right pb-1">Revenue</th></tr></thead>
@@ -127,7 +127,7 @@ export default function Reports() {
                 </table>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-5">
+              <div className="glass rounded-lg p-5">
                 <h3 className="font-semibold mb-3">Top 10 Produk Terlaris</h3>
                 <table className="min-w-full text-sm">
                   <thead><tr className="text-xs text-gray-500 border-b"><th className="text-left pb-1">Produk</th><th className="text-right pb-1">Qty</th><th className="text-right pb-1">Revenue</th></tr></thead>
@@ -144,7 +144,7 @@ export default function Reports() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-5">
+            <div className="glass rounded-lg p-5">
               <h3 className="font-semibold mb-3">Daftar Transaksi Penjualan</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full text-sm">
@@ -194,21 +194,21 @@ export default function Reports() {
         return (
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Total Nilai Inventory</p>
-                <p className="text-2xl font-bold text-indigo-600">{IDR(data.totalValue)}</p>
+                <p className="text-2xl font-bold text-[#800020]">{IDR(data.totalValue)}</p>
               </div>
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Stok Minimum</p>
                 <p className="text-2xl font-bold text-yellow-600">{data.lowStock?.length ?? 0} item</p>
               </div>
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Mendekati Expired</p>
                 <p className="text-2xl font-bold text-red-600">{data.expiring?.length ?? 0} item</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow overflow-auto">
+            <div className="glass rounded-lg overflow-auto">
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-50">
                   <tr>
@@ -226,7 +226,7 @@ export default function Reports() {
                       <td className="px-4 py-2">{r.stok}</td>
                       <td className="px-4 py-2">{r.unit?.name}</td>
                       <td className="px-4 py-2">{IDR(r.harga_beli)}</td>
-                      <td className="px-4 py-2 text-indigo-600">{IDR(r.nilai_stok)}</td>
+                      <td className="px-4 py-2 text-[#800020]">{IDR(r.nilai_stok)}</td>
                       <td className="px-4 py-2 text-red-500">{formatDate(r.tanggal_kedaluwarsa)}</td>
                     </tr>
                   ))}
@@ -240,17 +240,17 @@ export default function Reports() {
         return (
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Total Order</p>
                 <p className="text-2xl font-bold">{data.summary?.total_orders}</p>
               </div>
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Total Qty Diproduksi</p>
                 <p className="text-2xl font-bold text-blue-600">{NUM(data.summary?.total_qty)} pcs</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-5">
+            <div className="glass rounded-lg p-5">
               <h3 className="font-semibold mb-3">Per Produk</h3>
               <table className="min-w-full text-sm">
                 <thead><tr className="text-xs text-gray-500 border-b"><th className="text-left pb-1">Produk</th><th className="text-right pb-1">Total Qty</th></tr></thead>
@@ -271,18 +271,18 @@ export default function Reports() {
         return (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Total Waste</p>
                 <p className="text-2xl font-bold">{data.summary?.total_records} catatan</p>
               </div>
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="glass rounded-lg p-4">
                 <p className="text-xs text-gray-500">Total Kerugian</p>
                 <p className="text-2xl font-bold text-red-600">{IDR(data.summary?.total_estimated_loss)}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg shadow p-5">
+              <div className="glass rounded-lg p-5">
                 <h3 className="font-semibold mb-3">Per Alasan</h3>
                 <table className="min-w-full text-sm">
                   <thead><tr className="text-xs text-gray-500 border-b"><th className="text-left pb-1">Alasan</th><th className="text-right pb-1">Catatan</th><th className="text-right pb-1">Kerugian</th></tr></thead>
@@ -298,7 +298,7 @@ export default function Reports() {
                 </table>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-5">
+              <div className="glass rounded-lg p-5">
                 <h3 className="font-semibold mb-3">Per Tipe Item</h3>
                 {Object.entries(data.summary?.by_item_type ?? {}).map(([type, v]) => (
                   <div key={type} className="flex justify-between py-1 text-sm border-b last:border-0">
@@ -329,7 +329,7 @@ export default function Reports() {
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.key
-                ? 'border-indigo-500 text-indigo-600'
+                ? 'border-[#800020] text-[#800020]'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -359,7 +359,7 @@ export default function Reports() {
             />
             <button
               onClick={load}
-              className="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition"
+              className="px-4 py-1.5 bg-[#800020] text-white text-sm rounded hover:bg-[#4d0013] transition"
             >
               Filter
             </button>
@@ -373,7 +373,7 @@ export default function Reports() {
               </button>
             )}
             {!fromDate && !toDate && (
-              <span className="text-xs text-indigo-700 font-medium bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+              <span className="text-xs text-[#4d0013] font-medium bg-[#800020]/10 px-2.5 py-1 rounded-full border border-[#800020]/20">
                 Menampilkan Semua Data
               </span>
             )}
@@ -414,3 +414,4 @@ export default function Reports() {
     </div>
   );
 }
+

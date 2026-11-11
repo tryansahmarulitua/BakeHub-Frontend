@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { productionService, productService, recipeService } from '../../services/api';
 import {
   PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast, formatDate,
@@ -173,7 +173,7 @@ export default function Productions() {
 
             <div className="flex gap-2 justify-end pt-2 border-t">
               <button type="button" onClick={() => setModal(false)} className="px-4 py-2 text-sm border rounded">Batal</button>
-              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-indigo-600 text-white rounded disabled:opacity-50">
+              <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-[#800020] text-white rounded disabled:opacity-50">
                 {loading ? 'Menyimpan...' : 'Buat Produksi'}
               </button>
             </div>
@@ -224,3 +224,4 @@ export default function Productions() {
     </div>
   );
 }
+

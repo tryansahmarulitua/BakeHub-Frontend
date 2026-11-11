@@ -1,5 +1,30 @@
 @import "tailwindcss";
 
+:root {
+  --burgundy: #800020;
+  --burgundy-light: #a0003f;
+  --burgundy-dark: #4d0013;
+}
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
+  color: #3b101b;
+  background: linear-gradient(135deg, #f6e7eb, #ead0d7);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 10px 10px rgba(77, 0, 19, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px) saturate(1.1);
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+}
+
+.glass-dark {
+  background: rgb(77 0 19 / 0.88);
+  border-right: 1px solid rgb(255 255 255 / 0.16);
+  backdrop-filter: blur(16px);
 }

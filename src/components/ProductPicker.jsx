@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ProductPicker — pilih produk via kode, nama auto-isi.
  * Props:
  *   products   : Product[]
@@ -23,7 +23,7 @@ export default function ProductPicker({ products = [], value, onChange, error, d
               const p = products.find((x) => String(x.id) === e.target.value);
               onChange(e.target.value, p ?? null);
             }}
-            className={`w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-indigo-400 ${
+            className={`w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-[#800020] ${
               error ? 'border-red-400' : 'border-gray-300'
             } ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
           >
@@ -55,7 +55,7 @@ export default function ProductPicker({ products = [], value, onChange, error, d
           <span className={parseFloat(selected.stok) < 10 ? 'text-red-600 font-semibold' : 'text-green-700 font-medium'}>
             {selected.stok} pcs
           </span>
-          {' · '}Harga: <span className="text-indigo-700">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(selected.harga_jual)}</span>
+          {' · '}Harga: <span className="text-[#4d0013]">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(selected.harga_jual)}</span>
         </p>
       )}
 
@@ -63,3 +63,4 @@ export default function ProductPicker({ products = [], value, onChange, error, d
     </div>
   );
 }
+

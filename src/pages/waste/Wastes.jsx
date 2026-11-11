@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { wasteService, productService, rawMaterialService } from '../../services/api';
 import {
   PageHeader, Table, Pagination, Modal, FormField, Input, Select, Badge, Toast,
@@ -128,7 +128,7 @@ export default function Wastes() {
                             estimated_loss: calcLoss(e.target.value, f.item_type, f.quantity, products, rawMaterials),
                           }))}
                           required
-                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-400"
+                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#800020]"
                         >
                           <option value="">— Kode —</option>
                           {list.map((x) => (
@@ -199,3 +199,4 @@ export default function Wastes() {
     </div>
   );
 }
+
