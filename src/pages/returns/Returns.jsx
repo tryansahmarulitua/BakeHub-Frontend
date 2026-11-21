@@ -45,16 +45,20 @@ export default function Returns() {
   const [rawMaterials, setRawMaterials] = useState([]);
 
   const load = useCallback(async () => {
-    const res = await returnService.getAll(page);
-    setData(res.data.data.data);
-    setMeta(res.data.data);
+    try {
+      const res = await returnService.getAll(page);
+      setData(res.data.data.data);
+      setMeta(res.data.data);
+    } catch (err) {
+      showToast(err.response?.data?.message ?? 'Gagal memuat data return', 'error');
+    }
   }, [page]);
 
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    salesService.getAll(1, { per_page: 999 }).then((r) => setSales(r.data.data.data ?? []));
-    purchaseOrderService.getAll(1, { per_page: 999 }).then((r) => setPurchaseOrders(r.data.data.data ?? []));
+    salesService.getAll(1, { per_page: 999, status: 'completed' }).then((r) => setSales(r.data.data.data ?? []));
+    purchaseOrderService.getAll(1, { per_page: 999, status: 'received' }).then((r) => setPurchaseOrders(r.data.data.data ?? []));
     productService.getAll(1, '').then((r) => setProducts(r.data.data.data ?? []));
     rawMaterialService.getAll(1, '').then((r) => setRawMaterials(r.data.data.data ?? []));
   }, []);
@@ -79,13 +83,24 @@ export default function Returns() {
     setLoading(true);
     setErrors({});
     try {
-      await returnService.create(form);
+      const payload = {
+        ...form,
+        reference_id: Number(form.reference_id),
+        details: form.details.map((detail) => ({
+          ...detail,
+          item_id: Number(detail.item_id),
+          quantity: Number(detail.quantity),
+        })),
+      };
+      await returnService.create(payload);
       showToast('Return berhasil dibuat');
       setModal(false);
       setForm(EMPTY_FORM);
       load();
     } catch (err) {
-      setErrors(err.response?.data?.errors ?? {});
+      const response = err.response?.data;
+      setErrors(response?.errors ?? {});
+      showToast(response?.message ?? 'Data return tidak valid', 'error');
     } finally {
       setLoading(false);
     }
@@ -96,10 +111,28 @@ export default function Returns() {
     catch (err) { showToast(err.response?.data?.message ?? 'Gagal', 'error'); }
   };
 
+  const referenceLabel = (r) => {
+    const list = r.return_type === 'sales_return' ? sales : purchaseOrders;
+    const ref = list.find((item) => item.id === r.reference_id);
+    return ref?.invoice_number ?? ref?.nomor_po ?? r.reference_id;
+  };
+
+  const itemLabel = (detail) => {
+    const list = detail.item_type === 'product' ? products : rawMaterials;
+    const item = list.find((entry) => entry.id === detail.item_id);
+    return item?.nama_produk ?? item?.nama_bahan ?? `Item #${detail.item_id}`;
+  };
+
+  const selectedReference = (form.return_type === 'sales_return' ? sales : purchaseOrders)
+    .find((ref) => String(ref.id) === String(form.reference_id));
+  const sourceItemIds = new Set((selectedReference?.details ?? []).map((detail) => String(
+    form.return_type === 'sales_return' ? detail.product_id : detail.raw_material_id
+  )));
+
   const columns = [
     { key: 'return_number', label: 'Nomor' },
     { key: 'return_type', label: 'Tipe', render: (r) => <Badge value={r.return_type} map={TYPE_MAP} /> },
-    { key: 'reference_id', label: 'Ref ID' },
+    { key: 'reference_id', label: 'Referensi', render: referenceLabel },
     { key: 'return_date', label: 'Tanggal' },
     { key: 'reason', label: 'Alasan', render: (r) => <span className="max-w-xs truncate block">{r.reason}</span> },
     { key: 'status', label: 'Status', render: (r) => <Badge value={r.status} map={STATUS_MAP} /> },
@@ -109,7 +142,10 @@ export default function Returns() {
         <div className="flex gap-2">
           <button onClick={() => setViewModal(r)} className="text-blue-600 hover:underline">Detail</button>
           {r.status === 'pending' && (
-            <button onClick={() => action(returnService.approve, r.id, 'Return diapprove')} className="text-yellow-600 hover:underline">Approve</button>
+            <>
+              <button onClick={() => action(returnService.approve, r.id, 'Return diapprove')} className="text-yellow-600 hover:underline">Approve</button>
+              <button onClick={() => action(returnService.reject, r.id, 'Return ditolak')} className="text-red-600 hover:underline">Tolak</button>
+            </>
           )}
           {r.status === 'approved' && (
             <button onClick={() => action(returnService.complete, r.id, 'Return selesai, stok diperbarui')} className="text-green-600 hover:underline font-semibold">Selesaikan</button>
@@ -129,9 +165,17 @@ export default function Returns() {
       {modal && (
         <Modal title="Buat Return" onClose={() => setModal(false)}>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {Object.values(errors).flat().map((message, index) => (
+              <p key={index} className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">{message}</p>
+            ))}
             <div className="grid grid-cols-2 gap-3">
               <FormField label="Tipe Return" error={errors.return_type?.[0]}>
-                <Select value={form.return_type} onChange={(e) => setForm({ ...form, return_type: e.target.value, reference_id: '' })}>
+                <Select value={form.return_type} onChange={(e) => setForm({
+                  ...form,
+                  return_type: e.target.value,
+                  reference_id: '',
+                  details: [{ item_type: e.target.value === 'sales_return' ? 'product' : 'raw_material', item_id: '', quantity: '', condition: 'good' }],
+                })}>
                   <option value="sales_return">Return Penjualan</option>
                   <option value="purchase_return">Return Pembelian</option>
                 </Select>
@@ -172,7 +216,7 @@ export default function Returns() {
                 return (
                   <div key={i} className="border rounded p-2 space-y-2 mb-2">
                     <div className="flex gap-2">
-                      <Select value={d.item_type} onChange={(e) => updateRow(i, 'item_type', e.target.value)}>
+                      <Select value={d.item_type} disabled>
                         <option value="product">Produk</option>
                         <option value="raw_material">Bahan Baku</option>
                       </Select>
@@ -195,7 +239,7 @@ export default function Returns() {
                           className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#800020]"
                         >
                           <option value="">— Kode —</option>
-                          {itemList.map((x) => (
+                          {itemList.filter((x) => !selectedReference || sourceItemIds.has(String(x.id))).map((x) => (
                             <option key={x.id} value={x.id}>{x[kodeKey]}</option>
                           ))}
                         </select>
@@ -242,10 +286,17 @@ export default function Returns() {
         <Modal title={`Detail ${viewModal.return_number}`} onClose={() => setViewModal(null)}>
           <div className="space-y-2 text-sm">
             <p><strong>Tipe:</strong> <Badge value={viewModal.return_type} map={TYPE_MAP} /></p>
+            <p><strong>Referensi:</strong> {referenceLabel(viewModal)}</p>
             <p><strong>Tanggal:</strong> {formatDate(viewModal.return_date)}</p>
             <p><strong>Alasan:</strong> {viewModal.reason}</p>
             <p><strong>Status:</strong> <Badge value={viewModal.status} map={STATUS_MAP} /></p>
-            <p><strong>Item:</strong> {viewModal.details?.length ?? 0} item</p>
+            <div><strong>Item:</strong>
+              <ul className="mt-1 list-disc pl-5">
+                {viewModal.details?.map((detail) => (
+                  <li key={detail.id}>{itemLabel(detail)} — {detail.quantity} ({detail.condition === 'damaged' ? 'Rusak' : 'Baik'})</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </Modal>
       )}

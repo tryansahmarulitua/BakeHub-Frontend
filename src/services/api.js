@@ -136,6 +136,7 @@ export const returnService = {
   get: (id) => api.get(`/returns/${id}`),
   create: (data) => api.post('/returns', data),
   approve:  (id) => api.post(`/returns/${id}/approve`),
+  reject:   (id) => api.post(`/returns/${id}/reject`),
   complete: (id) => api.post(`/returns/${id}/complete`),
 };
 

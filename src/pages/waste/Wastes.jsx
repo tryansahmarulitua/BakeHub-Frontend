@@ -84,7 +84,10 @@ export default function Wastes() {
     { key: 'waste_number', label: 'Nomor' },
     { key: 'waste_date', label: 'Tanggal' },
     { key: 'item_type', label: 'Tipe', render: (r) => r.item_type === 'product' ? 'Produk' : 'Bahan Baku' },
-    { key: 'item', label: 'Item', render: (r) => r.item_type === 'product'
+    { key: 'item_code', label: 'Kode Item', render: (r) => r.item_type === 'product'
+      ? (r.product?.kode_produk ?? '-')
+      : (r.raw_material?.kode_bahan ?? '-') },
+    { key: 'item', label: 'Nama Item', render: (r) => r.item_type === 'product'
       ? (r.product?.nama_produk ?? '-')
       : (r.raw_material?.nama_bahan ?? '-') },
     { key: 'quantity', label: 'Qty' },
